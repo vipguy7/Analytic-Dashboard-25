@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import { Upload } from 'lucide-react';
 // I didn't put react-dropzone in the plan. I can implement it manually or install it.
 // Manual is fine for simple needs, but library is better.

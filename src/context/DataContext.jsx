@@ -2,8 +2,6 @@ import React, { createContext, useState, useContext } from 'react';
 
 const DataContext = createContext();
 
-export const useData = () => useContext(DataContext);
-
 export const DataProvider = ({ children }) => {
     const [data, setData] = useState([]);
     const [fileName, setFileName] = useState('');
@@ -29,3 +27,6 @@ export const DataProvider = ({ children }) => {
         </DataContext.Provider>
     );
 };
+
+// eslint-disable-next-line react-refresh/only-export-components
+export const useData = () => useContext(DataContext);

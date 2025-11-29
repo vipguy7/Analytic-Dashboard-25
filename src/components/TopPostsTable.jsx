@@ -64,12 +64,18 @@ const TopPostsTable = ({ data }) => {
         });
     };
 
+    // eslint-disable-next-line react-hooks/preserve-manual-memoization
     const sortedData = React.useMemo(() => {
+        const getValueInMemo = (row, keyPart) => {
+            const key = Object.keys(row).find(k => k.toLowerCase().includes(keyPart.toLowerCase()));
+            return key ? row[key] : '-';
+        };
+
         let sortableItems = [...data];
         if (sortConfig !== null) {
             sortableItems.sort((a, b) => {
-                const valA = Number(String(getValue(a, sortConfig.key)).replace(/,/g, '')) || 0;
-                const valB = Number(String(getValue(b, sortConfig.key)).replace(/,/g, '')) || 0;
+                const valA = Number(String(getValueInMemo(a, sortConfig.key)).replace(/,/g, '')) || 0;
+                const valB = Number(String(getValueInMemo(b, sortConfig.key)).replace(/,/g, '')) || 0;
 
                 if (valA < valB) {
                     return sortConfig.direction === 'ascending' ? -1 : 1;

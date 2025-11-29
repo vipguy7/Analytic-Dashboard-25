@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import BarChartComponent from './Charts/BarChartComponent';
 import LineChartComponent from './Charts/LineChartComponent';
 import { Users, Eye, Clock, MousePointer, Globe, TrendingUp } from 'lucide-react';
 
-const MetricCard = ({ title, value, change, icon: Icon, color }) => (
+const MetricCard = ({ title, value, change, icon: IconComponent, color }) => (
     <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
         <div className="flex items-center justify-between mb-4">
             <div className={`p-3 rounded-lg ${color}`}>
-                <Icon size={24} className="text-white" />
+                <IconComponent size={24} className="text-white" />
             </div>
             <div className={`text-sm font-semibold ${change >= 0 ? 'text-green-600' : 'text-red-600'}`}>
                 {change >= 0 ? '↑' : '↓'} {Math.abs(change)}%
@@ -21,10 +21,24 @@ const MetricCard = ({ title, value, change, icon: Icon, color }) => (
 const GoogleAnalyticsDashboard = ({ isDemo = true }) => {
     const [selectedSite, setSelectedSite] = useState('bur.mizzima.com');
     const [analyticsData, setAnalyticsData] = useState(null);
-    const [loading, setLoading] = useState(false);
+
+    const fetchGoogleAnalyticsData = async () => {
+        try {
+            // TODO: Implement actual API call
+            // const response = await fetch('/api/google-analytics', {
+            //   method: 'POST',
+            //   headers: { 'Content-Type': 'application/json' },
+            //   body: JSON.stringify({ propertyId: selectedSite })
+            // });
+            // const data = await response.json();
+            // setAnalyticsData(data);
+        } catch (error) {
+            console.error('Error fetching analytics:', error);
+        }
+    };
 
     // Demo data
-    const demoData = {
+    const demoData = useMemo(() => ({
         'bur.mizzima.com': {
             realTimeUsers: 234,
             pageViews: 15742,
@@ -166,34 +180,17 @@ const GoogleAnalyticsDashboard = ({ isDemo = true }) => {
                 { hour: '23:00', users: 376 }
             ]
         }
-    };
+    }), []);
 
     useEffect(() => {
         if (isDemo) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setAnalyticsData(demoData[selectedSite]);
         } else {
             // TODO: Fetch real data from Google Analytics API
             fetchGoogleAnalyticsData();
         }
-    }, [selectedSite, isDemo]);
-
-    const fetchGoogleAnalyticsData = async () => {
-        setLoading(true);
-        try {
-            // TODO: Implement actual API call
-            // const response = await fetch('/api/google-analytics', {
-            //   method: 'POST',
-            //   headers: { 'Content-Type': 'application/json' },
-            //   body: JSON.stringify({ propertyId: selectedSite })
-            // });
-            // const data = await response.json();
-            // setAnalyticsData(data);
-        } catch (error) {
-            console.error('Error fetching analytics:', error);
-        } finally {
-            setLoading(false);
-        }
-    };
+    }, [selectedSite, isDemo, demoData]);
 
     if (!analyticsData) return <div>Loading...</div>;
 

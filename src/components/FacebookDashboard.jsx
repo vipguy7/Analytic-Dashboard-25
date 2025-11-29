@@ -5,11 +5,11 @@ import BarChartComponent from './Charts/BarChartComponent';
 import TopPostsTable from './TopPostsTable';
 import { ThumbsUp, MessageCircle, Share2, MousePointer2, Image, Video, Play, FileText } from 'lucide-react';
 
-const StatRow = ({ label, value, icon: Icon, color }) => (
+const StatRow = ({ label, value, icon: IconComponent, color }) => (
     <div className="flex items-center justify-between p-4 border-b border-slate-100 last:border-0 hover:bg-slate-50 transition-colors">
         <div className="flex items-center gap-3">
             <div className={`p-2 rounded-lg ${color}`}>
-                <Icon size={18} className="text-white" />
+                <IconComponent size={18} className="text-white" />
             </div>
             <span className="text-slate-600 font-medium">{label}</span>
         </div>

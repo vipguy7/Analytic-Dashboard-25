@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import BarChartComponent from './Charts/BarChartComponent';
 import LineChartComponent from './Charts/LineChartComponent';
 import PieChartComponent from './Charts/PieChartComponent';
 import { Youtube, Eye, ThumbsUp, MessageCircle, UserPlus, TrendingUp, Video } from 'lucide-react';
 
-const MetricCard = ({ title, value, change, icon: Icon, color }) => (
+const MetricCard = ({ title, value, change, icon: IconComponent, color }) => (
     <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
         <div className="flex items-center justify-between mb-4">
             <div className={`p-3 rounded-lg ${color}`}>
-                <Icon size={24} className="text-white" />
+                <IconComponent size={24} className="text-white" />
             </div>
             <div className={`text-sm font-semibold ${change >= 0 ? 'text-green-600' : 'text-red-600'}`}>
                 {change >= 0 ? '↑' : '↓'} {Math.abs(change)}%
@@ -21,10 +21,25 @@ const MetricCard = ({ title, value, change, icon: Icon, color }) => (
 
 const YouTubeAnalyticsDashboard = ({ isDemo = true }) => {
     const [analyticsData, setAnalyticsData] = useState(null);
-    const [loading, setLoading] = useState(false);
+
+    const fetchYouTubeAnalytics = async () => {
+        try {
+            // TODO: Implement actual YouTube API call
+            // const response = await fetch('/api/youtube-analytics', {
+            //   headers: { 
+            //     'Authorization': `Bearer ${accessToken}`,
+            //     'Content-Type': 'application/json'
+            //   }
+            // });
+            // const data = await response.json();
+            // setAnalyticsData(processYouTubeData(data));
+        } catch (error) {
+            console.error('Error fetching YouTube analytics:', error);
+        }
+    };
 
     // Demo data for Mizzima YouTube channel
-    const demoData = {
+    const demoData = useMemo(() => ({
         channelMetrics: {
             subscribers: 458234,
             totalViews: 125678901,
@@ -80,34 +95,16 @@ const YouTubeAnalyticsDashboard = ({ isDemo = true }) => {
             { title: 'Analysis: Political Crisis', views: 143210, label: 'Analysis' },
             { title: 'Interview Series Ep 1', views: 128901, label: 'Interview' }
         ]
-    };
+    }), []);
 
     useEffect(() => {
         if (isDemo) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setAnalyticsData(demoData);
         } else {
             fetchYouTubeAnalytics();
         }
-    }, [isDemo]);
-
-    const fetchYouTubeAnalytics = async () => {
-        setLoading(true);
-        try {
-            // TODO: Implement actual YouTube API call
-            // const response = await fetch('/api/youtube-analytics', {
-            //   headers: { 
-            //     'Authorization': `Bearer ${accessToken}`,
-            //     'Content-Type': 'application/json'
-            //   }
-            // });
-            // const data = await response.json();
-            // setAnalyticsData(processYouTubeData(data));
-        } catch (error) {
-            console.error('Error fetching YouTube analytics:', error);
-        } finally {
-            setLoading(false);
-        }
-    };
+    }, [isDemo, demoData]);
 
     if (!analyticsData) return <div>Loading...</div>;
 
